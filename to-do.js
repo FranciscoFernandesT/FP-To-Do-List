@@ -131,6 +131,37 @@ tasksList.addEventListener('click', (e) => {
 //Botão de edição//
 
 
-//const editTask = () => {//
+const editTask = (idTarefa) => {
+    const currentTask = tasks.find(item => item.id === idTarefa);
+    
+    if (!currentTask) return;
 
-//};//
+    let newText = prompt("Edite a descrição da sua tarefa:", currentTask.task);
+
+    if (newText === null || newText.trim() === '') {
+        return; 
+    }
+
+    tasks = tasks.map(item => {
+        if (item.id === idTarefa) {
+            return { ...item, task: newText.trim() };
+        }
+        return item;
+    });
+
+    renderizarTarefas();
+    console.log("Tarefa editada com sucesso:", tasks);
+};
+
+
+//ouvir botão de edição
+
+
+tasksList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-edit')) {
+        const li = e.target.closest('li');
+        const idTarefa = Number(li.getAttribute('data-id'));
+
+        editTask(idTarefa);
+    }
+});
