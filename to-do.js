@@ -1,5 +1,6 @@
-let tasks = [];
+//variaveis e constantes//
 
+let tasks = [];
 
 const taskInput = document.getElementById('taskInput');
 const taskDateInput = document.getElementById('taskDateInput');
@@ -7,39 +8,32 @@ const btnTask = document.getElementById('btn-task');
 const tasksList = document.getElementById('tasks');
 
 
-
+//funcao para renderizar as tarefas//
 
 
 const renderizarTarefas = () => {
-
     tasksList.innerHTML = '';
 
     tasks.forEach((item) => {
         const li = document.createElement('li');
-        
         li.setAttribute('data-id', item.id);
 
-        // Define o texto e a data que vão aparecer na tela
+        const estiloRiscado = item.completed ? 'style="text-decoration: line-through; opacity: 0.6;"' : '';
+
         li.innerHTML = `
-            <span><strong>[ID: ${item.id}]</strong> ${item.task} - <small>${item.date}</small></span>
-            <button class="btn-deletar">✕</button>
+            <span class="itens" ${estiloRiscado}><strong>[ID: ${item.id}]</strong> • ${item.task} • /${item.date}/</span>
+            <button class="btn-conclude" title="Concluir">✔</button>
+            <button class="btn-edit" title="Editar">_/</button>
+            <button class="btn-delete" title="Deletar">✕</button>
         `;
 
-        // Adiciona o elemento <li> dentro do seu <ul> no HTML
         tasksList.appendChild(li);
     });
 };
 
 
 
-
-
-
-
-
-
-
-
+//funcao pra adicionar tarefa no array//
 
 
 const addTask = (text, date) => {
@@ -55,8 +49,7 @@ const addTask = (text, date) => {
 };
 
 
-
-
+//ouve e adiciona//
 
 
 btnTask.addEventListener('click', () => {
@@ -79,3 +72,65 @@ btnTask.addEventListener('click', () => {
     taskInput.value = '';
     taskDateInput.value = '';
 });
+
+
+//Remoção//
+
+
+const removeTask = (removeByID) => {
+    tasks = tasks.filter(item => item.id !== removeByID);
+    renderizarTarefas();
+
+    console.log('Tarefa removida:', tasks);
+};
+
+
+//Ouvir botão "X" de remoção e remove com a Remoção ;) //
+
+
+tasksList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-delete')) {
+        const li = e.target.closest('li');
+        const idTarefa = Number(li.getAttribute('data-id'));
+
+        removeTask(idTarefa);
+    }
+});
+
+
+//Função para marcar como concluida//
+
+
+const concludeTask = (idTarefa) => {
+    tasks = tasks.map(item => {
+        if (item.id === idTarefa) {
+            return { ...item, completed: !item.completed };
+        }
+        return item;
+    });
+    
+    renderizarTarefas();
+    console.log('Status da tarefa atualizado:', tasks);
+};
+
+
+//ouvir botão de conclusão//
+
+
+tasksList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-conclude')) {
+        const li = e.target.closest('li');
+        const idTarefa = Number(li.getAttribute('data-id'));
+
+        concludeTask(idTarefa);
+    }
+});
+
+
+
+//Botão de edição//
+
+
+//const editTask = () => {//
+
+//};//
